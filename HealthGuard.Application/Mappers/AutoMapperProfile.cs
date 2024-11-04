@@ -11,10 +11,10 @@ namespace HealthGuard.Application.Mappers
             CreateMap<User, UserDTO>()
                 .ForMember(
                 dst => dst.FirstName,
-                opts => opts.MapFrom(src => src.UserName!.Split(' ', StringSplitOptions.None)[0]))
+                opts => opts.MapFrom(src => src.UserName!.Split("-", StringSplitOptions.None)[0]))
                 .ForMember(
                 dst => dst.LastName,
-                opts => opts.MapFrom(src => src.UserName!.Split(' ', StringSplitOptions.None)[1]))
+                opts => opts.MapFrom(src => src.UserName!.Split("-", StringSplitOptions.None)[1]))
                 .ForMember(
                 dst => dst.Disabled,
                 opts => opts.MapFrom(src => src.LockoutEnd <= DateTimeOffset.UtcNow));
