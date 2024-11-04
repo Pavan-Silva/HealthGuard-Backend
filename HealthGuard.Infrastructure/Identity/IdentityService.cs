@@ -47,7 +47,7 @@ namespace HealthGuard.Infrastructure.Identity
 
         public async Task<UserDTO> GetUserByEmailAsync(string email)
         {
-            var user = await _userManager.FindByNameAsync(email)
+            var user = await _userManager.FindByEmailAsync(email)
                 ?? throw new NotFoundException("User not found");
 
             var roles = await _userManager.GetRolesAsync(user);
@@ -132,9 +132,9 @@ namespace HealthGuard.Infrastructure.Identity
             await _roleManager.DeleteAsync(role);
         }
 
-        public async Task UpdateAccountInfoAsync(string username, UpdateUserInfoDTO request)
+        public async Task UpdateAccountInfoAsync(string email, UpdateUserInfoDTO request)
         {
-            var user = await _userManager.FindByNameAsync(username)
+            var user = await _userManager.FindByEmailAsync(email)
                ?? throw new NotFoundException("User not found");
 
             user.UserName = request.FirstName + "-" + request.LastName;
@@ -143,18 +143,18 @@ namespace HealthGuard.Infrastructure.Identity
             await _userManager.UpdateAsync(user);
         }
 
-        public async Task UpdateProfileImageAsync(string username, string imageUrl)
+        public async Task UpdateProfileImageAsync(string email, string imageUrl)
         {
-            var user = await _userManager.FindByNameAsync(username)
+            var user = await _userManager.FindByEmailAsync(email)
                 ?? throw new NotFoundException("User not found");
 
             user.ProfileImageUrl = imageUrl;
             await _userManager.UpdateAsync(user);
         }
 
-        public async Task ChangePasswordAsync(string username, ResetUserPasswordDTO request)
+        public async Task ChangePasswordAsync(string email, ResetUserPasswordDTO request)
         {
-            var user = await _userManager.FindByNameAsync(username)
+            var user = await _userManager.FindByEmailAsync(email)
                 ?? throw new NotFoundException("User not found");
 
             var result = await _userManager.ChangePasswordAsync(user, request.OldPassword, request.NewPassword);
