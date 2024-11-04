@@ -10,5 +10,6 @@ namespace HealthGuard.Infrastructure.Data
         }
 
         public DbSet<Image> Images { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
     }
 }

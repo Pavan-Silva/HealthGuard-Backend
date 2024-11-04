@@ -1,3 +1,4 @@
+using HealthGuard.API.Hubs;
 using HealthGuard.Application;
 using HealthGuard.Domain.Entities;
 using HealthGuard.Infrastructure;
@@ -12,6 +13,9 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// SignalR
+builder.Services.AddSignalR();
 
 var configuration = builder.Configuration;
 
@@ -70,5 +74,6 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<NotificationHub>("/notificationHub");
 
 app.Run();

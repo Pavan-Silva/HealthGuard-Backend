@@ -26,9 +26,11 @@ namespace HealthGuard.Infrastructure
             // Services
             services.AddScoped<IImageService, ImageService>();
             services.AddScoped<IIdentityService, IdentityService>();
+            services.AddScoped<INotificationService, NotificationService>();
 
             // Repositories
             services.AddScoped<IImageRepository, ImageRepository>();
+            services.AddScoped<INotificationRepository, NotificationRepository>();
 
             return services;
         }
