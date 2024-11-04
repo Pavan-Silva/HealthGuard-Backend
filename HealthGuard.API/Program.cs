@@ -38,6 +38,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.Name = "hg_session";
     options.LoginPath = "";
     options.AccessDeniedPath = "";
+    options.SessionStore = new AppSessionStore();
 
     options.Events.OnRedirectToAccessDenied = context =>
     {

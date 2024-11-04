@@ -25,13 +25,6 @@ namespace HealthGuard.API.Controllers
             _identityService = identityService;
         }
 
-        [Authorize]
-        [HttpGet]
-        public IActionResult Get()
-        {
-            return Ok();
-        }
-
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginUserDTO dto)
         {
