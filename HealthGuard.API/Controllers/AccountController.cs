@@ -94,11 +94,6 @@ namespace HealthGuard.API.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterUserDTO dto)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             await _identityService.CreateUserAsync(dto);
             return Ok();
         }

@@ -1,6 +1,9 @@
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using HealthGuard.API.Hubs;
 using HealthGuard.API.Middleware;
 using HealthGuard.Application;
+using HealthGuard.Application.Validators;
 using HealthGuard.DataAccess;
 using HealthGuard.DataAccess.Identity;
 
@@ -15,6 +18,10 @@ builder.Services.AddSwaggerGen();
 
 // SignalR
 builder.Services.AddSignalR();
+
+// Fluent Validation
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<RegistrationValidator>();
 
 var configuration = builder.Configuration;
 
