@@ -1,4 +1,5 @@
 using HealthGuard.API.Hubs;
+using HealthGuard.API.Middleware;
 using HealthGuard.Application;
 using HealthGuard.DataAccess;
 using HealthGuard.DataAccess.Identity;
@@ -47,6 +48,10 @@ builder.Services.Configure<RouteOptions>(options =>
 options.LowercaseUrls = true
 );
 
+// Exception Handling
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -57,8 +62,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
+app.UseExceptionHandler(options => { });
 
 app.MapControllers();
 app.MapHub<NotificationHub>("/notificationHub");
