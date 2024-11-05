@@ -1,5 +1,5 @@
 ﻿using HealthGuard.Application.DTOs.Auth;
-using HealthGuard.Application.Interfaces.IServices;
+using HealthGuard.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HealthGuard.API.Controllers

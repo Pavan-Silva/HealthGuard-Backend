@@ -1,6 +1,6 @@
 ﻿using HealthGuard.Application.DTOs.Auth;
-using HealthGuard.Application.Interfaces.IServices;
-using HealthGuard.Domain.Entities;
+using HealthGuard.Application.Services.Interfaces;
+using HealthGuard.Core.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -122,7 +122,7 @@ namespace HealthGuard.API.Controllers
             var baseUrl = $"{_httpContextAccessor.HttpContext?.Request.Scheme}://{_httpContextAccessor.HttpContext?.Request.Host}";
             var imageUrl = baseUrl + "/api/images/" + imageId;
 
-            var username = User.Identity?.Name;
+            var username = User.FindFirstValue(ClaimTypes.Email);
             await _identityService.UpdateProfileImageAsync(username!, imageUrl);
             return Ok();
         }

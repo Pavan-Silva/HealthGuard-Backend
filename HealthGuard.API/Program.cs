@@ -1,9 +1,7 @@
 using HealthGuard.API.Hubs;
 using HealthGuard.Application;
-using HealthGuard.Domain.Entities;
-using HealthGuard.Infrastructure;
-using HealthGuard.Infrastructure.Identity;
-using Microsoft.AspNetCore.Identity;
+using HealthGuard.DataAccess;
+using HealthGuard.DataAccess.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,22 +18,11 @@ builder.Services.AddSignalR();
 var configuration = builder.Configuration;
 
 // Layers
-builder.Services.AddInfrastructure(configuration);
+builder.Services.AddDataAccess(configuration);
 builder.Services.AddApplication();
 
 // Authentication
 builder.Services.AddAuthorization();
-
-builder.Services.AddIdentity<User, IdentityRole>(options =>
-{
-    options.Password.RequiredLength = 8;
-    options.Password.RequireDigit = false;
-    options.Password.RequiredUniqueChars = 0;
-    options.Password.RequireLowercase = false;
-    options.Password.RequireUppercase = false;
-    options.Password.RequireNonAlphanumeric = false;
-})
-    .AddEntityFrameworkStores<IdentityDbContext>();
 
 builder.Services.ConfigureApplicationCookie(options =>
 {

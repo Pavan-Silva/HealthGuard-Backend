@@ -16,7 +16,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\HealthGuard.Application\HealthGuard.Application.csproj" />
-    <ProjectReference Include="..\HealthGuard.Infrastructure\HealthGuard.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
