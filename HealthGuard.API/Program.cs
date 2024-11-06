@@ -5,7 +5,6 @@ using HealthGuard.API.Middleware;
 using HealthGuard.Application;
 using HealthGuard.Application.Validators;
 using HealthGuard.DataAccess;
-using HealthGuard.DataAccess.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +20,7 @@ builder.Services.AddSignalR();
 
 // Fluent Validation
 builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddValidatorsFromAssemblyContaining<RegistrationValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<UserRegistrationValidator>();
 
 var configuration = builder.Configuration;
 
@@ -35,7 +34,9 @@ builder.Services.AddAuthorization();
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.Name = "hg_session";
-    options.SessionStore = new AppSessionStore();
+
+    //Disabled on development environment
+    //options.SessionStore = new AppSessionStore();
 
     options.Events.OnRedirectToAccessDenied = context =>
     {
@@ -57,7 +58,6 @@ options.LowercaseUrls = true
 
 // Exception Handling
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 
@@ -68,9 +68,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseExceptionHandler(_ => { });
 app.UseHttpsRedirection();
 app.UseAuthorization();
-app.UseExceptionHandler(options => { });
 
 app.MapControllers();
 app.MapHub<NotificationHub>("/notificationHub");

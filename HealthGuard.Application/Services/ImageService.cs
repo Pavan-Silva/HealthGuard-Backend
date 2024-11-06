@@ -15,10 +15,10 @@ namespace HealthGuard.Application.Services
             _imageRepository = imageRepository;
         }
 
-        public async Task<Image> GetImageAsync(string id)
+        public async Task<Image> GetImageAsync(Guid id)
         {
-            return await _imageRepository.GetAsync(i => i.Id == new Guid(id))
-                ?? throw new NotFoundException("Image not found");
+            return await _imageRepository.GetAsync(i => i.Id == id)
+                ?? throw new NotFoundException($"Image does not exist with id: {id}");
         }
 
         public async Task<string> SaveImageAsync(IFormFile imageFile)
@@ -39,10 +39,10 @@ namespace HealthGuard.Application.Services
             return imageId.ToString();
         }
 
-        public async Task UpdateImageAsync(string id, IFormFile file)
+        public async Task UpdateImageAsync(Guid id, IFormFile file)
         {
-            var image = await _imageRepository.GetAsync(i => i.Id == new Guid(id))
-                ?? throw new NotFoundException("Image not found");
+            var image = await _imageRepository.GetAsync(i => i.Id == id)
+                ?? throw new NotFoundException($"Image does not exist with id: {id}");
 
             using var memoryStream = new MemoryStream();
             await file.CopyToAsync(memoryStream);
@@ -51,10 +51,10 @@ namespace HealthGuard.Application.Services
             await _imageRepository.UpdateAsync(image);
         }
 
-        public async Task DeleteImageAsync(string id)
+        public async Task DeleteImageAsync(Guid id)
         {
-            var image = await _imageRepository.GetAsync(i => i.Id == new Guid(id))
-                ?? throw new NotFoundException("Image not found");
+            var image = await _imageRepository.GetAsync(i => i.Id == id)
+                ?? throw new NotFoundException($"Image does not exist with id: {id}");
 
             await _imageRepository.RemoveAsync(image);
         }

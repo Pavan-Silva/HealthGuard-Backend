@@ -48,7 +48,7 @@ namespace HealthGuard.Application.Services
         public async Task<UserDTO> GetUserByEmailAsync(string email)
         {
             var user = await _userManager.FindByEmailAsync(email)
-                ?? throw new NotFoundException("User not found");
+                ?? throw new NotFoundException($"User does not exist with email: {email}");
 
             var roles = await _userManager.GetRolesAsync(user);
             var dto = _mapper.Map<UserDTO>(user);
@@ -56,10 +56,10 @@ namespace HealthGuard.Application.Services
             return dto;
         }
 
-        public async Task<UserDTO> GetUserByIdAsync(string userId)
+        public async Task<UserDTO> GetUserByIdAsync(string id)
         {
-            var user = await _userManager.FindByIdAsync(userId)
-                ?? throw new NotFoundException("User not found");
+            var user = await _userManager.FindByIdAsync(id)
+                ?? throw new NotFoundException($"Couldn't find user with Id: {id}");
 
             var roles = await _userManager.GetRolesAsync(user);
             var dto = _mapper.Map<UserDTO>(user);
@@ -82,10 +82,10 @@ namespace HealthGuard.Application.Services
                 throw new BadRequestException(result.Errors.First().ToString()!);
         }
 
-        public async Task UpdateUserAsync(string userId, RegisterUserDTO dto)
+        public async Task UpdateUserAsync(string id, RegisterUserDTO dto)
         {
-            var user = await _userManager.FindByIdAsync(userId)
-                ?? throw new NotFoundException("User not found");
+            var user = await _userManager.FindByIdAsync(id)
+                ?? throw new NotFoundException($"Couldn't find user with Id: {id}");
 
             user.UserName = dto.Email;
             user.UserName = dto.FirstName + "-" + dto.LastName;
@@ -93,13 +93,13 @@ namespace HealthGuard.Application.Services
             await _userManager.UpdateAsync(user);
         }
 
-        public async Task DeleteUserAsync(string userId)
+        public async Task DeleteUserAsync(string id)
         {
-            var user = await _userManager.FindByIdAsync(userId)
-                ?? throw new NotFoundException("User not found");
+            var user = await _userManager.FindByIdAsync(id)
+                ?? throw new NotFoundException($"Couldn't find user with Id: {id}");
 
-            if (user.Email == "admin@anima.lk")
-                throw new BadRequestException("You can not delete admin user");
+            if (user.Email == "admin@healthguard.lk")
+                throw new BadRequestException("Admin user cannot be deleted.");
 
             await _userManager.DeleteAsync(user);
         }
@@ -119,7 +119,6 @@ namespace HealthGuard.Application.Services
             };
 
             var result = await _roleManager.CreateAsync(role);
-
             if (!result.Succeeded)
                 throw new BadRequestException(result.Errors.ToString()!);
         }
@@ -127,7 +126,7 @@ namespace HealthGuard.Application.Services
         public async Task DeleteRoleAsync(string roleName)
         {
             var role = await _roleManager.FindByNameAsync(roleName)
-                ?? throw new NotFoundException("Role not found");
+                ?? throw new NotFoundException($"Role does not exist with name: {roleName}");
 
             await _roleManager.DeleteAsync(role);
         }
@@ -135,7 +134,7 @@ namespace HealthGuard.Application.Services
         public async Task UpdateAccountInfoAsync(string email, UpdateUserInfoDTO dto)
         {
             var user = await _userManager.FindByEmailAsync(email)
-               ?? throw new NotFoundException("User not found");
+               ?? throw new NotFoundException($"User does not exist with email: {email}");
 
             user.UserName = dto.FirstName + "-" + dto.LastName;
             user.Email = dto.Email;
@@ -146,7 +145,7 @@ namespace HealthGuard.Application.Services
         public async Task UpdateProfileImageAsync(string email, string imageUrl)
         {
             var user = await _userManager.FindByEmailAsync(email)
-                ?? throw new NotFoundException("User not found");
+                ?? throw new NotFoundException($"User does not exist with email: {email}");
 
             user.ProfileImageUrl = imageUrl;
             await _userManager.UpdateAsync(user);
@@ -155,7 +154,7 @@ namespace HealthGuard.Application.Services
         public async Task ChangePasswordAsync(string email, ResetUserPasswordDTO dto)
         {
             var user = await _userManager.FindByEmailAsync(email)
-                ?? throw new NotFoundException("User not found");
+                ?? throw new NotFoundException($"User does not exist with email: {email}");
 
             var result = await _userManager.ChangePasswordAsync(user, dto.OldPassword, dto.NewPassword);
             if (!result.Succeeded)

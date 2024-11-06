@@ -24,13 +24,13 @@ namespace HealthGuard.Application.Services
             return _mapper.Map<List<NotificationDTO>>(notifications);
         }
 
-        public async void MarkAsReadAsync(int id, string receiver)
+        public async void MarkAsReadAsync(Guid id, string receiver)
         {
             var notification = await _notificationRepository.GetAsync(n => n.Id == id)
-                ?? throw new NotFoundException("Notification not found");
+                ?? throw new NotFoundException($"Couldn't find a notification with id: {id}");
 
             if (notification.User.Email != receiver)
-                throw new BadRequestException("Invalid receiver");
+                throw new BadRequestException("Invalid notification for the receiver.");
 
             notification.IsRead = true;
             await _notificationRepository.UpdateAsync(notification);
@@ -42,13 +42,13 @@ namespace HealthGuard.Application.Services
             await _notificationRepository.RemoveRangeAsync(notifications.ToList());
         }
 
-        public async void RemoveAsync(int id, string receiver)
+        public async void RemoveAsync(Guid id, string receiver)
         {
             var notification = await _notificationRepository.GetAsync(n => n.Id == id)
-                ?? throw new NotFoundException("Notification not found");
+                ?? throw new NotFoundException($"Couldn't find a notification with id: {id}");
 
             if (notification.User.Email != receiver)
-                throw new BadRequestException("Invalid receiver");
+                throw new BadRequestException("Invalid notification for the receiver.");
 
             await _notificationRepository.RemoveAsync(notification);
         }

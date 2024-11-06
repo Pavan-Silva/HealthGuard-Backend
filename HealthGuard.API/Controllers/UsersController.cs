@@ -21,28 +21,23 @@ namespace HealthGuard.API.Controllers
             return Ok(await _identityService.GetUsersAsync(pageIndex, pageSize));
         }
 
-        [HttpGet("{userId}")]
-        public async Task<IActionResult> GetUserById(string userId)
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetUserById(string id)
         {
-            return Ok(await _identityService.GetUserByIdAsync(userId));
+            return Ok(await _identityService.GetUserByIdAsync(id));
         }
 
-        [HttpPut("{userId}")]
-        public async Task<IActionResult> UpdateUser(string userId, [FromBody] RegisterUserDTO model)
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateUser(string id, [FromBody] RegisterUserDTO model)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            await _identityService.UpdateUserAsync(userId, model);
+            await _identityService.UpdateUserAsync(id, model);
             return Ok();
         }
 
-        [HttpDelete("{userId}")]
-        public async Task<IActionResult> DeleteUser(string userId)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteUser(string id)
         {
-            await _identityService.DeleteUserAsync(userId);
+            await _identityService.DeleteUserAsync(id);
             return Ok();
         }
     }

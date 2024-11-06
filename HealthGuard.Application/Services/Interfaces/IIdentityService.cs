@@ -10,13 +10,13 @@ namespace HealthGuard.Application.Services.Interfaces
 
         Task<PaginatedList<UserDTO>> GetUsersAsync(int pageIndex, int pageSize);
 
-        Task<UserDTO> GetUserByIdAsync(string userId);
+        Task<UserDTO> GetUserByIdAsync(string id);
 
         Task<UserDTO> GetUserByEmailAsync(string email);
 
-        Task UpdateUserAsync(string userId, RegisterUserDTO request);
+        Task UpdateUserAsync(string id, RegisterUserDTO request);
 
-        Task DeleteUserAsync(string userId);
+        Task DeleteUserAsync(string id);
 
         /* Role Management */
         Task<List<string?>> GetRolesAsync();

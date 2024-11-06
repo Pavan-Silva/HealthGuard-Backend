@@ -1,9 +1,7 @@
 ﻿using HealthGuard.Core.Entities;
 using HealthGuard.DataAccess.Context;
-using HealthGuard.DataAccess.Identity;
 using HealthGuard.DataAccess.Repositories;
 using HealthGuard.DataAccess.Repositories.Interfaces;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -50,7 +48,8 @@ namespace HealthGuard.DataAccess
                 options.User.RequireUniqueEmail = true;
             });
 
-            services.AddSingleton<ITicketStore, AppSessionStore>();
+            // Disabled on development environment
+            //services.AddSingleton<ITicketStore, AppSessionStore>();
         }
     }
 }

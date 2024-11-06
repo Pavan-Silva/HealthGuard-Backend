@@ -8,9 +8,9 @@ namespace HealthGuard.Application.Services.Interfaces
 
         void SendAsync(string message);
 
-        void MarkAsReadAsync(int id, string receiver);
+        void MarkAsReadAsync(Guid id, string receiver);
 
-        void RemoveAsync(int id, string receiver);
+        void RemoveAsync(Guid id, string receiver);
 
         void RemoveAllByReceiverAsync(string receiver);
     }

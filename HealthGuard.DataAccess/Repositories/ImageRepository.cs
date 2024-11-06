@@ -8,7 +8,6 @@ namespace HealthGuard.DataAccess.Repositories
     {
         public ImageRepository(AppDbContext context) : base(context)
         {
-
         }
     }
 }

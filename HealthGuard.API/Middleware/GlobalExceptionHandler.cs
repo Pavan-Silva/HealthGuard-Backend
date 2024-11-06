@@ -1,6 +1,5 @@
 ﻿using HealthGuard.Application.Exceptions;
 using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.AspNetCore.Mvc;
 
 namespace HealthGuard.API.Middleware
 {
@@ -17,14 +16,15 @@ namespace HealthGuard.API.Middleware
                 _ => StatusCodes.Status500InternalServerError,
             };
 
-            var problemDetails = new ProblemDetails
+            var result = new
             {
+                Title = exception.GetType().Name,
                 Status = statusCode,
-                Type = exception.GetType().Name,
                 Detail = exception.Message
             };
 
-            await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
+            httpContext.Response.StatusCode = statusCode;
+            await httpContext.Response.WriteAsJsonAsync(result, cancellationToken);
             return true;
         }
     }

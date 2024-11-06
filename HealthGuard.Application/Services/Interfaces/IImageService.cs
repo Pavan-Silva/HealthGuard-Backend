@@ -5,12 +5,12 @@ namespace HealthGuard.Application.Services.Interfaces
 {
     public interface IImageService
     {
-        Task<Image> GetImageAsync(string id);
+        Task<Image> GetImageAsync(Guid id);
 
         Task<string> SaveImageAsync(IFormFile image);
 
-        Task UpdateImageAsync(string id, IFormFile image);
+        Task UpdateImageAsync(Guid id, IFormFile image);
 
-        Task DeleteImageAsync(string id);
+        Task DeleteImageAsync(Guid id);
     }
 }

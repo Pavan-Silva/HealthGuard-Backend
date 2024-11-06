@@ -17,7 +17,7 @@ namespace HealthGuard.API.Controllers
 
         [Authorize]
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetImage(string id)
+        public async Task<IActionResult> GetImage(Guid id)
         {
             var image = await _imageService.GetImageAsync(id);
             return File(image.Data, image.ContentType);
@@ -25,7 +25,7 @@ namespace HealthGuard.API.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateImage(string id, IFormFile file)
+        public async Task<IActionResult> UpdateImage(Guid id, IFormFile file)
         {
             await _imageService.UpdateImageAsync(id, file);
             return Ok();
@@ -33,7 +33,7 @@ namespace HealthGuard.API.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteImage(string id)
+        public async Task<IActionResult> DeleteImage(Guid id)
         {
             await _imageService.DeleteImageAsync(id);
             return Ok();

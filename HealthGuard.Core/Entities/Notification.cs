@@ -5,7 +5,7 @@ namespace HealthGuard.Core.Entities
     public class Notification
     {
         [Key]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public required User User { get; set; }
 

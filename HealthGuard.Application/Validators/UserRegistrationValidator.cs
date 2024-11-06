@@ -3,9 +3,9 @@ using HealthGuard.Application.DTOs.Auth;
 
 namespace HealthGuard.Application.Validators
 {
-    public class RegistrationValidator : AbstractValidator<RegisterUserDTO>
+    public class UserRegistrationValidator : AbstractValidator<RegisterUserDTO>
     {
-        public RegistrationValidator()
+        public UserRegistrationValidator()
         {
             RuleFor(r => r.Email)
                 .NotEmpty()
