@@ -31,7 +31,7 @@ namespace HealthGuard.Application.Services
             _transmissionMethodRepository = transmissionMethodRepository;
         }
 
-        public async Task<IEnumerable<Disease>> GetAllAsync(PageParams pageParams, DiseaseParams query)
+        public async Task<PaginatedList<Disease>> GetAllAsync(PageParams pageParams, DiseaseParams query)
         {
             var filters = new List<Expression<Func<Disease, bool>>>();
 
@@ -65,8 +65,19 @@ namespace HealthGuard.Application.Services
                 d.VaccineAvailable == query.VaccineAvailability);
             }
 
-            return await _diseaseRepository.GetFilteredAsync(filters,
+            var result = await _diseaseRepository.GetFilteredAsync(filters,
                 pageParams.PageIndex, pageParams.PageSize);
+
+            var totalCount = await _diseaseRepository.GetFilteredCountAsync(filters);
+            var totalPages = (int)Math.Ceiling(totalCount / (double)pageParams.PageSize);
+
+            return new PaginatedList<Disease>
+            (
+                result.ToList(),
+                pageParams.PageIndex,
+                totalPages,
+                totalCount
+            );
         }
 
         public async Task<Disease> GetByIdAsync(int id)

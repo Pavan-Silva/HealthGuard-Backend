@@ -36,5 +36,17 @@ namespace HealthGuard.DataAccess.Repositories
                 .Take(pageSize)
                 .ToListAsync();
         }
+
+        public async Task<int> GetFilteredCountAsync(List<Expression<Func<Disease, bool>>> filters)
+        {
+            var query = _context.Diseases.AsQueryable();
+
+            foreach (var filter in filters)
+            {
+                query = query.Where(filter);
+            }
+
+            return await query.CountAsync();
+        }
     }
 }
