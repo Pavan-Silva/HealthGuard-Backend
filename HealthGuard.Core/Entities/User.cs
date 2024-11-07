@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using HealthGuard.Core.Common;
+using Microsoft.AspNetCore.Identity;
 
 namespace HealthGuard.Core.Entities
 {
-    public class User : IdentityUser
+    public class User : IdentityUser, IAuditedEntity
     {
-        public required DateTime CreatedAt { get; set; }
-
         public string? ProfileImageUrl { get; set; }
+
+        public DateTime CreatedOn { get; set; }
+
+        public DateTime? UpdatedOn { get; set; }
     }
 }

@@ -22,6 +22,132 @@ namespace HealthGuard.DataAccess.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("DiseaseSymptom", b =>
+                {
+                    b.Property<int>("DiseasesId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SymptomsId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("DiseasesId", "SymptomsId");
+
+                    b.HasIndex("SymptomsId");
+
+                    b.ToTable("DiseaseSymptom");
+                });
+
+            modelBuilder.Entity("DiseaseTransmissionMethod", b =>
+                {
+                    b.Property<int>("DiseasesId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TransmissionMethodsId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("DiseasesId", "TransmissionMethodsId");
+
+                    b.HasIndex("TransmissionMethodsId");
+
+                    b.ToTable("DiseaseTransmissionMethod");
+                });
+
+            modelBuilder.Entity("DiseaseTreatment", b =>
+                {
+                    b.Property<int>("DiseasesId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("TreatmentsId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("DiseasesId", "TreatmentsId");
+
+                    b.HasIndex("TreatmentsId");
+
+                    b.ToTable("DiseaseTreatment");
+                });
+
+            modelBuilder.Entity("HealthGuard.Core.Entities.Disease.Disease", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("VaccineAvailable")
+                        .HasColumnType("boolean");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Diseases");
+                });
+
+            modelBuilder.Entity("HealthGuard.Core.Entities.Disease.Symptom", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Symptoms");
+                });
+
+            modelBuilder.Entity("HealthGuard.Core.Entities.Disease.TransmissionMethod", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("TransmissionMethods");
+                });
+
+            modelBuilder.Entity("HealthGuard.Core.Entities.Disease.Treatment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Treatments");
+                });
+
             modelBuilder.Entity("HealthGuard.Core.Entities.Image", b =>
                 {
                     b.Property<Guid>("Id")
@@ -43,11 +169,9 @@ namespace HealthGuard.DataAccess.Migrations
 
             modelBuilder.Entity("HealthGuard.Core.Entities.Notification", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("timestamp with time zone");
@@ -81,7 +205,7 @@ namespace HealthGuard.DataAccess.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("CreatedAt")
+                    b.Property<DateTime>("CreatedOn")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
@@ -116,6 +240,9 @@ namespace HealthGuard.DataAccess.Migrations
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
@@ -263,6 +390,51 @@ namespace HealthGuard.DataAccess.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("DiseaseSymptom", b =>
+                {
+                    b.HasOne("HealthGuard.Core.Entities.Disease.Disease", null)
+                        .WithMany()
+                        .HasForeignKey("DiseasesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HealthGuard.Core.Entities.Disease.Symptom", null)
+                        .WithMany()
+                        .HasForeignKey("SymptomsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DiseaseTransmissionMethod", b =>
+                {
+                    b.HasOne("HealthGuard.Core.Entities.Disease.Disease", null)
+                        .WithMany()
+                        .HasForeignKey("DiseasesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HealthGuard.Core.Entities.Disease.TransmissionMethod", null)
+                        .WithMany()
+                        .HasForeignKey("TransmissionMethodsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("DiseaseTreatment", b =>
+                {
+                    b.HasOne("HealthGuard.Core.Entities.Disease.Disease", null)
+                        .WithMany()
+                        .HasForeignKey("DiseasesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("HealthGuard.Core.Entities.Disease.Treatment", null)
+                        .WithMany()
+                        .HasForeignKey("TreatmentsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("HealthGuard.Core.Entities.Notification", b =>

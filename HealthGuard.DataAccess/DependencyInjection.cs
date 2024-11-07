@@ -29,6 +29,11 @@ namespace HealthGuard.DataAccess
         private static void AddRepositories(this IServiceCollection services)
         {
             services.AddScoped<IImageRepository, ImageRepository>();
+            services.AddScoped<IDiseaseRepository, DiseaseRepository>();
+            services.AddScoped<ISymptomRepository, SymptomRepository>();
+            services.AddScoped<ITreatmentRepository, TreatmentRepository>();
+            services.AddScoped<ITransmissionMethodRepository, TransmissionMethodRepository>();
+
             services.AddScoped<INotificationRepository, NotificationRepository>();
         }
 

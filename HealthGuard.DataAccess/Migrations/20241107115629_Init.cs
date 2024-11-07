@@ -31,8 +31,9 @@ namespace HealthGuard.DataAccess.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     ProfileImageUrl = table.Column<string>(type: "text", nullable: true),
+                    CreatedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
@@ -52,6 +53,23 @@ namespace HealthGuard.DataAccess.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Diseases",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Description = table.Column<string>(type: "text", nullable: false),
+                    VaccineAvailable = table.Column<bool>(type: "boolean", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedOn = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Diseases", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Images",
                 columns: table => new
                 {
@@ -62,6 +80,45 @@ namespace HealthGuard.DataAccess.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Images", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Symptoms",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Symptoms", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TransmissionMethods",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TransmissionMethods", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Treatments",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Treatments", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -174,8 +231,7 @@ namespace HealthGuard.DataAccess.Migrations
                 name: "Notifications",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
                     UserId = table.Column<string>(type: "text", nullable: true),
                     Message = table.Column<string>(type: "text", nullable: false),
                     IsRead = table.Column<bool>(type: "boolean", nullable: false),
@@ -189,6 +245,78 @@ namespace HealthGuard.DataAccess.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DiseaseSymptom",
+                columns: table => new
+                {
+                    DiseasesId = table.Column<int>(type: "integer", nullable: false),
+                    SymptomsId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DiseaseSymptom", x => new { x.DiseasesId, x.SymptomsId });
+                    table.ForeignKey(
+                        name: "FK_DiseaseSymptom_Diseases_DiseasesId",
+                        column: x => x.DiseasesId,
+                        principalTable: "Diseases",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DiseaseSymptom_Symptoms_SymptomsId",
+                        column: x => x.SymptomsId,
+                        principalTable: "Symptoms",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DiseaseTransmissionMethod",
+                columns: table => new
+                {
+                    DiseasesId = table.Column<int>(type: "integer", nullable: false),
+                    TransmissionMethodsId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DiseaseTransmissionMethod", x => new { x.DiseasesId, x.TransmissionMethodsId });
+                    table.ForeignKey(
+                        name: "FK_DiseaseTransmissionMethod_Diseases_DiseasesId",
+                        column: x => x.DiseasesId,
+                        principalTable: "Diseases",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DiseaseTransmissionMethod_TransmissionMethods_TransmissionM~",
+                        column: x => x.TransmissionMethodsId,
+                        principalTable: "TransmissionMethods",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DiseaseTreatment",
+                columns: table => new
+                {
+                    DiseasesId = table.Column<int>(type: "integer", nullable: false),
+                    TreatmentsId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DiseaseTreatment", x => new { x.DiseasesId, x.TreatmentsId });
+                    table.ForeignKey(
+                        name: "FK_DiseaseTreatment_Diseases_DiseasesId",
+                        column: x => x.DiseasesId,
+                        principalTable: "Diseases",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DiseaseTreatment_Treatments_TreatmentsId",
+                        column: x => x.TreatmentsId,
+                        principalTable: "Treatments",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -229,6 +357,21 @@ namespace HealthGuard.DataAccess.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_DiseaseSymptom_SymptomsId",
+                table: "DiseaseSymptom",
+                column: "SymptomsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DiseaseTransmissionMethod_TransmissionMethodsId",
+                table: "DiseaseTransmissionMethod",
+                column: "TransmissionMethodsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DiseaseTreatment_TreatmentsId",
+                table: "DiseaseTreatment",
+                column: "TreatmentsId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Notifications_UserId",
                 table: "Notifications",
                 column: "UserId");
@@ -253,6 +396,15 @@ namespace HealthGuard.DataAccess.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "DiseaseSymptom");
+
+            migrationBuilder.DropTable(
+                name: "DiseaseTransmissionMethod");
+
+            migrationBuilder.DropTable(
+                name: "DiseaseTreatment");
+
+            migrationBuilder.DropTable(
                 name: "Images");
 
             migrationBuilder.DropTable(
@@ -260,6 +412,18 @@ namespace HealthGuard.DataAccess.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Symptoms");
+
+            migrationBuilder.DropTable(
+                name: "TransmissionMethods");
+
+            migrationBuilder.DropTable(
+                name: "Diseases");
+
+            migrationBuilder.DropTable(
+                name: "Treatments");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

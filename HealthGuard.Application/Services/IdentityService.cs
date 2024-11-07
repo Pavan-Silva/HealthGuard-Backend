@@ -74,7 +74,7 @@ namespace HealthGuard.Application.Services
                 Email = dto.Email,
                 PhoneNumber = dto.PhoneNumber,
                 UserName = dto.FirstName + "-" + dto.LastName,
-                CreatedAt = DateTime.UtcNow,
+                CreatedOn = DateTime.UtcNow,
             };
 
             var result = await _userManager.CreateAsync(user, dto.Password);
