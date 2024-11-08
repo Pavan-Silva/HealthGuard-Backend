@@ -17,8 +17,7 @@ namespace HealthGuard.Application.Services
             _treatmentRepository = treatmentRepository;
         }
 
-        public async Task<IEnumerable<Treatment>> GetAllAsync(
-            FilterByDiseaseParams symptomParams, PageParams pageParams)
+        public async Task<PaginatedList<Treatment>> GetAllAsync(FilterByDiseaseParams symptomParams, PageParams pageParams)
         {
             Expression<Func<Treatment, bool>> filter = t => true;
 
@@ -36,7 +35,23 @@ namespace HealthGuard.Application.Services
                 }
             }
 
-            return await _treatmentRepository.GetAllAsync(filter);
+            var result = await _treatmentRepository.GetAllAsync(
+                filter: filter,
+                orderBy: t => t.OrderBy(t => t.Id),
+                includeProperties: null,
+                pageParams.PageIndex,
+                pageParams.PageSize);
+
+            var totalCount = await _treatmentRepository.CountAsync(filter);
+            var totalPages = (int)Math.Ceiling(totalCount / (double)pageParams.PageSize);
+
+            return new PaginatedList<Treatment>
+            (
+                result.ToList(),
+                pageParams.PageIndex,
+                totalPages,
+                totalCount
+            );
         }
 
         public async Task<Treatment> GetByIdAsync(int id)

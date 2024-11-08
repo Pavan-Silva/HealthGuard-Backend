@@ -4,6 +4,7 @@ using HealthGuard.Application.Exceptions;
 using HealthGuard.Application.Services.Interfaces;
 using HealthGuard.Core.Entities.Disease;
 using HealthGuard.DataAccess.Repositories.Interfaces;
+using System.Linq.Expressions;
 
 namespace HealthGuard.Application.Services
 {
@@ -16,21 +17,41 @@ namespace HealthGuard.Application.Services
             _symptomRepository = symptomRepository;
         }
 
-        public async Task<IEnumerable<Symptom>> GetSymptomsAsync(FilterByDiseaseParams filterParams, PageParams pageParams)
+        public async Task<PaginatedList<Symptom>> GetSymptomsAsync(FilterByDiseaseParams filterParams, PageParams pageParams)
         {
+            Expression<Func<Symptom, bool>> filter = t => true;
+
             if (!string.IsNullOrEmpty(filterParams.SearchQuery))
             {
                 if (filterParams.FilterByDisease == true)
                 {
-                    return await _symptomRepository.GetAllAsync(e =>
-                    e.Diseases.Any(d => d.Name.ToLower().Contains(filterParams.SearchQuery.ToLower())));
+                    filter = t => t.Diseases.Any(d =>
+                    d.Name.ToLower().Contains(filterParams.SearchQuery.ToLower()));
                 }
-
-                return await _symptomRepository.GetAllAsync(e =>
-                e.Name.ToLower().Contains(filterParams.SearchQuery.ToLower()));
+                else
+                {
+                    filter = t =>
+                    t.Name.ToLower().Contains(filterParams.SearchQuery.ToLower());
+                }
             }
 
-            return await _symptomRepository.GetAllAsync();
+            var result = await _symptomRepository.GetAllAsync(
+                filter: filter,
+                orderBy: t => t.OrderBy(t => t.Id),
+                includeProperties: null,
+                pageParams.PageIndex,
+                pageParams.PageSize);
+
+            var totalCount = await _symptomRepository.CountAsync(filter);
+            var totalPages = (int)Math.Ceiling(totalCount / (double)pageParams.PageSize);
+
+            return new PaginatedList<Symptom>
+            (
+                result.ToList(),
+                pageParams.PageIndex,
+                totalPages,
+                totalCount
+            );
         }
 
         public async Task AddSymptomAsync(string symptom)

@@ -6,7 +6,7 @@ namespace HealthGuard.Application.Services.Interfaces
 {
     public interface ITreatmentService
     {
-        Task<IEnumerable<Treatment>> GetAllAsync(FilterByDiseaseParams filterParams, PageParams pageParams);
+        Task<PaginatedList<Treatment>> GetAllAsync(FilterByDiseaseParams filterParams, PageParams pageParams);
 
         Task<Treatment> GetByIdAsync(int id);
 

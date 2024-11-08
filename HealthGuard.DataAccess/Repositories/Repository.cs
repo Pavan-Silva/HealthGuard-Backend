@@ -17,7 +17,12 @@ namespace HealthGuard.DataAccess.Repositories
             _dbSet = _context.Set<T>();
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
+        public virtual async Task<IEnumerable<T>> GetAllAsync(
+            Expression<Func<T, bool>>? filter = null,
+            Func<IQueryable<T>, IOrderedQueryable<T>>? orderBy = null,
+            string? includeProperties = null,
+            int? pageIndex = null,
+            int? pageSize = null)
         {
             IQueryable<T> query = _dbSet;
 
@@ -34,10 +39,22 @@ namespace HealthGuard.DataAccess.Repositories
                 }
             }
 
+            if (orderBy != null)
+            {
+                query = orderBy(query);
+            }
+
+            if (pageSize.HasValue && pageIndex.HasValue)
+            {
+                query = query
+                    .Skip((pageIndex.Value - 1) * pageSize.Value)
+                    .Take(pageSize.Value);
+            }
+
             return await query.ToListAsync();
         }
 
-        public async Task<T?> GetAsync(Expression<Func<T, bool>> filter, string? includeProperties = null)
+        public virtual async Task<T?> GetAsync(Expression<Func<T, bool>> filter, string? includeProperties = null)
         {
             IQueryable<T> query = _dbSet;
 
@@ -57,19 +74,30 @@ namespace HealthGuard.DataAccess.Repositories
             return await query.FirstOrDefaultAsync();
         }
 
-        public async Task AddAsync(T entity)
+        public virtual async Task<int> CountAsync(Expression<Func<T, bool>>? filter = null)
+        {
+            IQueryable<T> query = _dbSet;
+            if (filter != null)
+            {
+                query = query.Where(filter);
+            }
+
+            return await query.CountAsync();
+        }
+
+        public virtual async Task AddAsync(T entity)
         {
             await _dbSet.AddAsync(entity);
             await _context.SaveChangesAsync();
         }
 
-        public async Task RemoveAsync(T entity)
+        public virtual async Task RemoveAsync(T entity)
         {
             _dbSet.Remove(entity);
             await _context.SaveChangesAsync();
         }
 
-        public async Task UpdateAsync(T entity)
+        public virtual async Task UpdateAsync(T entity)
         {
             _dbSet.Attach(entity);
             _context.Entry(entity).State = EntityState.Modified;
