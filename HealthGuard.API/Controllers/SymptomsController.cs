@@ -1,4 +1,6 @@
-﻿using HealthGuard.Application.Services.Interfaces;
+﻿using HealthGuard.Application.DTOs;
+using HealthGuard.Application.DTOs.Disease;
+using HealthGuard.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HealthGuard.API.Controllers
@@ -15,9 +17,11 @@ namespace HealthGuard.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetSymptoms([FromQuery] int diseaseId)
+        public async Task<IActionResult> GetSymptoms(
+            [FromQuery] SymptomParams filterParams,
+            [FromQuery] PageParams pageParams)
         {
-            return Ok(await _symptomService.GetSymptomsAsync());
+            return Ok(await _symptomService.GetSymptomsAsync(filterParams, pageParams));
         }
 
         [HttpPost]

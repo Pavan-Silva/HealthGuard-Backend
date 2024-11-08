@@ -1,4 +1,6 @@
-﻿using HealthGuard.Application.Exceptions;
+﻿using HealthGuard.Application.DTOs;
+using HealthGuard.Application.DTOs.Disease;
+using HealthGuard.Application.Exceptions;
 using HealthGuard.Application.Services.Interfaces;
 using HealthGuard.Core.Entities.Disease;
 using HealthGuard.DataAccess.Repositories.Interfaces;
@@ -14,8 +16,20 @@ namespace HealthGuard.Application.Services
             _symptomRepository = symptomRepository;
         }
 
-        public async Task<IEnumerable<Symptom>> GetSymptomsAsync()
+        public async Task<IEnumerable<Symptom>> GetSymptomsAsync(SymptomParams filterParams, PageParams pageParams)
         {
+            if (!string.IsNullOrEmpty(filterParams.SearchQuery))
+            {
+                if (filterParams.FilterByDisease == true)
+                {
+                    return await _symptomRepository.GetAllAsync(e =>
+                    e.Diseases.Any(d => d.Name.ToLower().Contains(filterParams.SearchQuery.ToLower())));
+                }
+
+                return await _symptomRepository.GetAllAsync(e =>
+                e.Name.ToLower().Contains(filterParams.SearchQuery.ToLower()));
+            }
+
             return await _symptomRepository.GetAllAsync();
         }
 
