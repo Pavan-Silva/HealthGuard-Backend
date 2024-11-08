@@ -1,12 +1,12 @@
-﻿using HealthGuard.Core.Entities.Disease;
+﻿using HealthGuard.Application.DTOs;
+using HealthGuard.Application.DTOs.Disease;
+using HealthGuard.Core.Entities.Disease;
 
 namespace HealthGuard.Application.Services.Interfaces
 {
     public interface ITreatmentService
     {
-        Task<IEnumerable<Treatment>> GetAllAsync();
-
-        Task<IEnumerable<Treatment>> GetByDiseaseIdAsync(int id);
+        Task<IEnumerable<Treatment>> GetAllAsync(FilterByDiseaseParams filterParams, PageParams pageParams);
 
         Task<Treatment> GetByIdAsync(int id);
 

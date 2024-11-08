@@ -1,6 +1,6 @@
 ﻿namespace HealthGuard.Application.DTOs.Disease
 {
-    public class SymptomParams
+    public class FilterByDiseaseParams
     {
         public bool? FilterByDisease { get; set; }
 

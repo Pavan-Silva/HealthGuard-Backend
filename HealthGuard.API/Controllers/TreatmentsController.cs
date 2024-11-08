@@ -1,4 +1,6 @@
-﻿using HealthGuard.Application.Services.Interfaces;
+﻿using HealthGuard.Application.DTOs;
+using HealthGuard.Application.DTOs.Disease;
+using HealthGuard.Application.Services.Interfaces;
 using HealthGuard.Core.Entities.Disease;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,9 +18,11 @@ namespace HealthGuard.API.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetTreatments()
+        public async Task<IActionResult> GetTreatments(
+            [FromQuery] FilterByDiseaseParams filterParams,
+            [FromQuery] PageParams pageParams)
         {
-            return Ok(await _treatmentService.GetAllAsync());
+            return Ok(await _treatmentService.GetAllAsync(filterParams, pageParams));
         }
 
         [HttpGet("{id}")]

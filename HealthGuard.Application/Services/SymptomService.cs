@@ -16,7 +16,7 @@ namespace HealthGuard.Application.Services
             _symptomRepository = symptomRepository;
         }
 
-        public async Task<IEnumerable<Symptom>> GetSymptomsAsync(SymptomParams filterParams, PageParams pageParams)
+        public async Task<IEnumerable<Symptom>> GetSymptomsAsync(FilterByDiseaseParams filterParams, PageParams pageParams)
         {
             if (!string.IsNullOrEmpty(filterParams.SearchQuery))
             {

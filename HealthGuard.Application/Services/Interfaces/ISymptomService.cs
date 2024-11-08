@@ -6,7 +6,7 @@ namespace HealthGuard.Application.Services.Interfaces
 {
     public interface ISymptomService
     {
-        Task<IEnumerable<Symptom>> GetSymptomsAsync(SymptomParams filterParams, PageParams pageParams);
+        Task<IEnumerable<Symptom>> GetSymptomsAsync(FilterByDiseaseParams filterParams, PageParams pageParams);
 
         Task AddSymptomAsync(string symptom);
 

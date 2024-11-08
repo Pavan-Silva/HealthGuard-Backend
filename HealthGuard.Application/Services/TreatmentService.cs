@@ -1,7 +1,10 @@
-﻿using HealthGuard.Application.Exceptions;
+﻿using HealthGuard.Application.DTOs;
+using HealthGuard.Application.DTOs.Disease;
+using HealthGuard.Application.Exceptions;
 using HealthGuard.Application.Services.Interfaces;
 using HealthGuard.Core.Entities.Disease;
 using HealthGuard.DataAccess.Repositories.Interfaces;
+using System.Linq.Expressions;
 
 namespace HealthGuard.Application.Services
 {
@@ -14,14 +17,26 @@ namespace HealthGuard.Application.Services
             _treatmentRepository = treatmentRepository;
         }
 
-        public async Task<IEnumerable<Treatment>> GetAllAsync()
+        public async Task<IEnumerable<Treatment>> GetAllAsync(
+            FilterByDiseaseParams symptomParams, PageParams pageParams)
         {
-            return await _treatmentRepository.GetAllAsync();
-        }
+            Expression<Func<Treatment, bool>> filter = t => true;
 
-        public Task<IEnumerable<Treatment>> GetByDiseaseIdAsync(int diseaseId)
-        {
-            throw new NotImplementedException();
+            if (!string.IsNullOrEmpty(symptomParams.SearchQuery))
+            {
+                if (symptomParams.FilterByDisease == true)
+                {
+                    filter = t => t.Diseases.Any(d =>
+                    d.Name.ToLower().Contains(symptomParams.SearchQuery.ToLower()));
+                }
+                else
+                {
+                    filter = t =>
+                    t.Name.ToLower().Contains(symptomParams.SearchQuery.ToLower());
+                }
+            }
+
+            return await _treatmentRepository.GetAllAsync(filter);
         }
 
         public async Task<Treatment> GetByIdAsync(int id)

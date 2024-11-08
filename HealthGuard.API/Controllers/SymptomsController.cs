@@ -18,7 +18,7 @@ namespace HealthGuard.API.Controllers
 
         [HttpGet]
         public async Task<IActionResult> GetSymptoms(
-            [FromQuery] SymptomParams filterParams,
+            [FromQuery] FilterByDiseaseParams filterParams,
             [FromQuery] PageParams pageParams)
         {
             return Ok(await _symptomService.GetSymptomsAsync(filterParams, pageParams));
