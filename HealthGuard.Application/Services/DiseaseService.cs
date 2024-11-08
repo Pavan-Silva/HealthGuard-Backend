@@ -31,38 +31,34 @@ namespace HealthGuard.Application.Services
             _transmissionMethodRepository = transmissionMethodRepository;
         }
 
-        public async Task<PaginatedList<Disease>> GetAllAsync(PageParams pageParams, DiseaseParams query)
+        public async Task<PaginatedList<Disease>> GetAllAsync(PageParams pageParams, DiseaseParams filterParams)
         {
             var filters = new List<Expression<Func<Disease, bool>>>();
 
-            if (!string.IsNullOrEmpty(query.DiseaseName))
+            if (!string.IsNullOrEmpty(filterParams.SearchQuery))
             {
-                filters.Add(d =>
-                d.Name.Contains(query.DiseaseName));
+                if (filterParams.FilterBySymptoms == true)
+                {
+                    filters.Add(d =>
+                    d.Symptoms.Any(s => s.Name.ToLower().Contains(filterParams.SearchQuery.ToLower())));
+                }
+                else
+                {
+                    filters.Add(d =>
+                    d.Name.ToLower().Contains(filterParams.SearchQuery.ToLower()));
+                }
             }
 
-            if (query.SymptomId != null)
+            if (filterParams.TransmissionMethodId != null)
             {
                 filters.Add(d =>
-                d.Symptoms.Any(s => s.Id == query.SymptomId));
+                d.TransmissionMethods!.Any(t => filterParams.TransmissionMethodId.Contains(t.Id)));
             }
 
-            if (query.TreatmentId != null)
+            if (filterParams.VaccineAvailability != null)
             {
                 filters.Add(d =>
-                d.Treatments!.Any(t => t.Id == query.TreatmentId));
-            }
-
-            if (query.TransmissionMethodId != null)
-            {
-                filters.Add(d =>
-                d.TransmissionMethods!.Any(t => t.Id == query.TransmissionMethodId));
-            }
-
-            if (query.VaccineAvailability != null)
-            {
-                filters.Add(d =>
-                d.VaccineAvailable == query.VaccineAvailability);
+                d.VaccineAvailable == filterParams.VaccineAvailability);
             }
 
             var result = await _diseaseRepository.GetFilteredAsync(filters,

@@ -4,12 +4,10 @@
     {
         public bool? VaccineAvailability { get; set; }
 
-        public string? DiseaseName { get; set; }
+        public string? SearchQuery { get; set; }
 
-        public int? TreatmentId { get; set; }
+        public bool? FilterBySymptoms { get; set; }
 
-        public int? SymptomId { get; set; }
-
-        public int? TransmissionMethodId { get; set; }
+        public ICollection<int>? TransmissionMethodId { get; set; }
     }
 }
