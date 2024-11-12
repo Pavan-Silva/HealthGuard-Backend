@@ -12,7 +12,9 @@
 
         public string PhoneNumber { get; set; } = string.Empty;
 
-        public DateTime CreatedAt { get; set; }
+        public DateTime CreatedOn { get; set; }
+
+        public DateTime UpdatedOn { get; set; }
 
         public IEnumerable<string>? Roles { get; set; }
 

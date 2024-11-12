@@ -7,6 +7,19 @@ using HealthGuard.Application.Validators;
 using HealthGuard.DataAccess;
 
 var builder = WebApplication.CreateBuilder(args);
+var CORS_POLICY = "react_app";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: CORS_POLICY,
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:3000")
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials();
+        });
+});
 
 // Add services to the container.
 
@@ -68,6 +81,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors(CORS_POLICY);
 app.UseExceptionHandler(_ => { });
 app.UseHttpsRedirection();
 app.UseAuthorization();
