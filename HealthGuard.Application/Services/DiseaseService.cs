@@ -12,23 +12,14 @@ namespace HealthGuard.Application.Services
     public class DiseaseService : IDiseaseService
     {
         private readonly IMapper _mapper;
-        private readonly ISymptomRepository _symptomRepository;
         private readonly IDiseaseRepository _diseaseRepository;
-        private readonly ITreatmentRepository _treatmentRepository;
-        private readonly ITransmissionMethodRepository _transmissionMethodRepository;
 
         public DiseaseService(
             IMapper mapper,
-            IDiseaseRepository diseaseRepository,
-            ISymptomRepository symptomRepository,
-            ITreatmentRepository treatmentRepository,
-            ITransmissionMethodRepository transmissionMethodRepository)
+            IDiseaseRepository diseaseRepository)
         {
             _mapper = mapper;
-            _symptomRepository = symptomRepository;
             _diseaseRepository = diseaseRepository;
-            _treatmentRepository = treatmentRepository;
-            _transmissionMethodRepository = transmissionMethodRepository;
         }
 
         public async Task<PaginatedList<Disease>> GetAllAsync(PageParams pageParams, DiseaseParams filterParams)
@@ -85,7 +76,7 @@ namespace HealthGuard.Application.Services
         public async Task AddAsync(CreateDiseaseDto model)
         {
             var disease = _mapper.Map<Disease>(model);
-            disease = await AddDiseaseAttributesAsync(disease, model);
+            disease = AddDiseaseAttributesAsync(disease, model);
             disease.CreatedOn = DateTime.UtcNow;
 
             await _diseaseRepository.AddAsync(disease);
@@ -97,7 +88,7 @@ namespace HealthGuard.Application.Services
                ?? throw new NotFoundException($"Disease does not exist with id: {id}.");
 
             var disease = _mapper.Map(model, existingDisease);
-            disease = await AddDiseaseAttributesAsync(disease, model);
+            disease = AddDiseaseAttributesAsync(disease, model);
             disease.UpdatedOn = DateTime.UtcNow;
 
             await _diseaseRepository.UpdateAsync(disease);
@@ -111,15 +102,13 @@ namespace HealthGuard.Application.Services
             await _diseaseRepository.RemoveAsync(disease);
         }
 
-        private async Task<Disease> AddDiseaseAttributesAsync(Disease entity, CreateDiseaseDto model)
+        private Disease AddDiseaseAttributesAsync(Disease entity, CreateDiseaseDto model)
         {
             if (model.Symptoms != null)
             {
                 foreach (var symptomId in model.Symptoms)
                 {
-                    var symptom = await _symptomRepository.GetAsync(s => s.Id == symptomId)
-                        ?? throw new NotFoundException($"Symptom does not exist with id: {symptomId}.");
-
+                    var symptom = new Symptom { Id = symptomId };
                     entity.Symptoms.Add(symptom);
                 }
             }
@@ -128,9 +117,7 @@ namespace HealthGuard.Application.Services
             {
                 foreach (var transmissionMethodId in model.TransmissionMethods)
                 {
-                    var transmissionMethod = await _transmissionMethodRepository.GetAsync(t => t.Id == transmissionMethodId)
-                        ?? throw new NotFoundException($"TransmissionMethod does not exist with id: {transmissionMethodId}.");
-
+                    var transmissionMethod = new TransmissionMethod { Id = transmissionMethodId };
                     entity.TransmissionMethods?.Add(transmissionMethod);
                 }
             }
@@ -139,9 +126,7 @@ namespace HealthGuard.Application.Services
             {
                 foreach (var treatmentId in model.Treatments)
                 {
-                    var treatment = await _treatmentRepository.GetAsync(t => t.Id == treatmentId)
-                        ?? throw new NotFoundException($"Treatment does not exist with id: {treatmentId}.");
-
+                    var treatment = new Treatment { Id = treatmentId };
                     entity.Treatments?.Add(treatment);
                 }
             }

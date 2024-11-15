@@ -48,5 +48,19 @@ namespace HealthGuard.DataAccess.Repositories
 
             return await query.CountAsync();
         }
+
+        public override Task AddAsync(Disease entity)
+        {
+            _context.Symptoms.AttachRange(entity.Symptoms);
+
+            if (entity.Treatments != null)
+                _context.Treatments.AttachRange(entity.Treatments);
+
+            if (entity.TransmissionMethods != null)
+                _context.TransmissionMethods.AttachRange(entity.TransmissionMethods);
+
+            _context.Diseases.Add(entity);
+            return _context.SaveChangesAsync();
+        }
     }
 }
