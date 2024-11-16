@@ -1,6 +1,6 @@
 ﻿namespace HealthGuard.Application.DTOs.Disease
 {
-    public class CreateDiseaseDto
+    public class DiseaseRequest
     {
         public string Name { get; set; } = string.Empty;
 

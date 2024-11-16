@@ -10,9 +10,9 @@ namespace HealthGuard.Application.Services.Interfaces
 
         Task<Treatment> GetByIdAsync(int id);
 
-        Task AddAsync(Treatment treatment);
+        Task AddAsync(TreatmentRequest model);
 
-        Task UpdateAsync(int id, Treatment treatment);
+        Task UpdateAsync(int id, TreatmentRequest model);
 
         Task DeleteAsync(int id);
     }

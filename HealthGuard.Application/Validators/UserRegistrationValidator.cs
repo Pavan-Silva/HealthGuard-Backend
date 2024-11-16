@@ -3,7 +3,7 @@ using HealthGuard.Application.DTOs.Auth;
 
 namespace HealthGuard.Application.Validators
 {
-    public class UserRegistrationValidator : AbstractValidator<RegisterUserDTO>
+    public class UserRegistrationValidator : AbstractValidator<RegisterUserRequest>
     {
         public UserRegistrationValidator()
         {

@@ -6,7 +6,7 @@ namespace HealthGuard.Application.Services.Interfaces
     public interface IIdentityService
     {
         /* User Management */
-        Task CreateUserAsync(RegisterUserDTO dto);
+        Task CreateUserAsync(RegisterUserRequest dto);
 
         Task<PaginatedList<UserDTO>> GetUsersAsync(int pageIndex, int pageSize);
 
@@ -14,7 +14,7 @@ namespace HealthGuard.Application.Services.Interfaces
 
         Task<UserDTO> GetUserByEmailAsync(string email);
 
-        Task UpdateUserAsync(string id, RegisterUserDTO request);
+        Task UpdateUserAsync(string id, RegisterUserRequest request);
 
         Task DeleteUserAsync(string id);
 
@@ -26,10 +26,10 @@ namespace HealthGuard.Application.Services.Interfaces
         Task DeleteRoleAsync(string roleName);
 
         /* Account Management */
-        Task UpdateAccountInfoAsync(string username, UpdateUserInfoDTO dto);
+        Task UpdateAccountInfoAsync(string username, UpdateAccountRequest dto);
 
         Task UpdateProfileImageAsync(string username, string imageUrl);
 
-        Task ChangePasswordAsync(string username, ResetUserPasswordDTO dto);
+        Task ChangePasswordAsync(string username, ResetPasswordRequest dto);
     }
 }

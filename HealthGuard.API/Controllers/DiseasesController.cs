@@ -31,14 +31,14 @@ namespace HealthGuard.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateDisease([FromBody] CreateDiseaseDto model)
+        public async Task<IActionResult> CreateDisease([FromBody] DiseaseRequest model)
         {
             await _diseaseService.AddAsync(model);
             return Ok();
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateDisease(int id, [FromBody] CreateDiseaseDto model)
+        public async Task<IActionResult> UpdateDisease(int id, [FromBody] DiseaseRequest model)
         {
             await _diseaseService.UpdateAsync(id, model);
             return Ok();

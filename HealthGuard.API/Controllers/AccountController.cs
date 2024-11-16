@@ -45,7 +45,7 @@ namespace HealthGuard.API.Controllers
 
         [Authorize]
         [HttpPost("info")]
-        public async Task<IActionResult> UpdateUserInfo([FromBody] UpdateUserInfoDTO model)
+        public async Task<IActionResult> UpdateUserInfo([FromBody] UpdateAccountRequest model)
         {
             var email = User.FindFirstValue(ClaimTypes.Email);
             await _identityService.UpdateAccountInfoAsync(email!, model);
@@ -54,7 +54,7 @@ namespace HealthGuard.API.Controllers
 
         [Authorize]
         [HttpPost("reset-password")]
-        public async Task<IActionResult> ChangePassword([FromBody] ResetUserPasswordDTO model)
+        public async Task<IActionResult> ChangePassword([FromBody] ResetPasswordRequest model)
         {
             var email = User.FindFirstValue(ClaimTypes.Email);
             await _identityService.ChangePasswordAsync(email!, model);
@@ -62,7 +62,7 @@ namespace HealthGuard.API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginUserDTO dto)
+        public async Task<IActionResult> Login([FromBody] LoginRequest dto)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -92,7 +92,7 @@ namespace HealthGuard.API.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterUserDTO dto)
+        public async Task<IActionResult> Register([FromBody] RegisterUserRequest dto)
         {
             await _identityService.CreateUserAsync(dto);
             return Ok();

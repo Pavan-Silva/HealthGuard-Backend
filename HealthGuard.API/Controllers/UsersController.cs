@@ -28,7 +28,7 @@ namespace HealthGuard.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateUser(string id, [FromBody] RegisterUserDTO model)
+        public async Task<IActionResult> UpdateUser(string id, [FromBody] RegisterUserRequest model)
         {
             await _identityService.UpdateUserAsync(id, model);
             return Ok();

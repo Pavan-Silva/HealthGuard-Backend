@@ -1,7 +1,6 @@
 ﻿using HealthGuard.Application.DTOs;
 using HealthGuard.Application.DTOs.Disease;
 using HealthGuard.Application.Services.Interfaces;
-using HealthGuard.Core.Entities.Disease;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HealthGuard.API.Controllers
@@ -32,16 +31,16 @@ namespace HealthGuard.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateTreatment([FromBody] Treatment treatment)
+        public async Task<IActionResult> CreateTreatment([FromBody] TreatmentRequest model)
         {
-            await _treatmentService.AddAsync(treatment);
+            await _treatmentService.AddAsync(model);
             return Ok();
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTreatment(int id, [FromBody] Treatment treatment)
+        public async Task<IActionResult> UpdateTreatment(int id, [FromBody] TreatmentRequest model)
         {
-            await _treatmentService.UpdateAsync(id, treatment);
+            await _treatmentService.UpdateAsync(id, model);
             return Ok();
         }
 

@@ -4,6 +4,7 @@ using HealthGuard.Application.Exceptions;
 using HealthGuard.Application.Services.Interfaces;
 using HealthGuard.Core.Entities.Disease;
 using HealthGuard.DataAccess.Repositories.Interfaces;
+using Mapster;
 using System.Linq.Expressions;
 
 namespace HealthGuard.Application.Services
@@ -60,19 +61,19 @@ namespace HealthGuard.Application.Services
                 ?? throw new NotFoundException($"Treatment does not exist with id: {id}.");
         }
 
-        public async Task AddAsync(Treatment treatment)
+        public async Task AddAsync(TreatmentRequest model)
         {
+            var treatment = model.Adapt<Treatment>();
             await _treatmentRepository.AddAsync(treatment);
         }
 
-        public async Task UpdateAsync(int id, Treatment treatment)
+        public async Task UpdateAsync(int id, TreatmentRequest model)
         {
             var existingTreatment = await _treatmentRepository.GetAsync(t => t.Id == id)
                 ?? throw new NotFoundException($"Treatment does not exist with id: {id}.");
 
-            existingTreatment.Name = treatment.Name;
-
-            await _treatmentRepository.UpdateAsync(existingTreatment);
+            var treatment = model.Adapt(existingTreatment);
+            await _treatmentRepository.UpdateAsync(treatment);
         }
 
         public async Task DeleteAsync(int id)

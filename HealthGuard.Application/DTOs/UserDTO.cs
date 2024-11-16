@@ -16,6 +16,8 @@
 
         public DateTime UpdatedOn { get; set; }
 
+        public DateTime? LastLogin { get; set; }
+
         public IEnumerable<string>? Roles { get; set; }
 
         public string? ProfileImageUrl { get; set; }

@@ -2,7 +2,7 @@
 
 namespace HealthGuard.Application.DTOs.Auth
 {
-    public class LoginUserDTO
+    public class LoginRequest
     {
         [Required]
         [EmailAddress]

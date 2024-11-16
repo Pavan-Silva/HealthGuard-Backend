@@ -1,4 +1,4 @@
-﻿using HealthGuard.Application.Mappings;
+﻿using HealthGuard.Application.Configs;
 using HealthGuard.Application.Services;
 using HealthGuard.Application.Services.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,7 +10,7 @@ namespace HealthGuard.Application
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
             services.AddServices();
-            services.RegisterAutoMapper();
+            services.RegisterMapsterConfig();
             return services;
         }
 
@@ -24,11 +24,6 @@ namespace HealthGuard.Application
 
             services.AddScoped<IIdentityService, IdentityService>();
             services.AddScoped<INotificationService, NotificationService>();
-        }
-
-        private static void RegisterAutoMapper(this IServiceCollection services)
-        {
-            services.AddAutoMapper(typeof(UserProfile));
         }
     }
 }

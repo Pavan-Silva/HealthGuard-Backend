@@ -10,6 +10,8 @@ namespace HealthGuard.Core.Entities.Disease
 
         public string Name { get; set; } = string.Empty;
 
+        //public string Description { get; set; } = string.Empty;
+
         [JsonIgnore]
         public ICollection<Disease> Diseases { get; set; } = [];
     }

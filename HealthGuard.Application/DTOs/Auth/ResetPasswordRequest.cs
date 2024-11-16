@@ -2,7 +2,7 @@
 
 namespace HealthGuard.Application.DTOs.Auth
 {
-    public class ResetUserPasswordDTO
+    public class ResetPasswordRequest
     {
         [Required]
         [MinLength(8)]

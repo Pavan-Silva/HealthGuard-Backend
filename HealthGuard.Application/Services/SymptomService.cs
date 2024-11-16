@@ -4,6 +4,7 @@ using HealthGuard.Application.Exceptions;
 using HealthGuard.Application.Services.Interfaces;
 using HealthGuard.Core.Entities.Disease;
 using HealthGuard.DataAccess.Repositories.Interfaces;
+using Mapster;
 using System.Linq.Expressions;
 
 namespace HealthGuard.Application.Services
@@ -54,23 +55,19 @@ namespace HealthGuard.Application.Services
             );
         }
 
-        public async Task AddSymptomAsync(string symptom)
+        public async Task AddSymptomAsync(SymptomRequest model)
         {
-            var newSymptom = new Symptom
-            {
-                Name = symptom
-            };
-
-            await _symptomRepository.AddAsync(newSymptom);
+            var symptom = model.Adapt<Symptom>();
+            await _symptomRepository.AddAsync(symptom);
         }
 
-        public async Task UpdateSymptomAsync(int id, string symptom)
+        public async Task UpdateSymptomAsync(int id, SymptomRequest model)
         {
             var existingSymptom = await _symptomRepository.GetAsync(s => s.Id == id)
                 ?? throw new NotFoundException($"Symptom does not exist with id: {id}");
 
-            existingSymptom.Name = symptom;
-            await _symptomRepository.UpdateAsync(existingSymptom);
+            var symptom = model.Adapt(existingSymptom);
+            await _symptomRepository.UpdateAsync(symptom);
         }
 
         public async Task DeleteSymptomAsync(int id)

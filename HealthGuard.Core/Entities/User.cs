@@ -10,5 +10,7 @@ namespace HealthGuard.Core.Entities
         public DateTime CreatedOn { get; set; }
 
         public DateTime? UpdatedOn { get; set; }
+
+        //public DateTime? LastLogin { get; set; }
     }
 }

@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using HealthGuard.Application.Exceptions;
-using HealthGuard.Application.Mappings;
+﻿using HealthGuard.Application.Exceptions;
 using HealthGuard.Application.Services;
 using HealthGuard.Core.Entities.Disease;
 using HealthGuard.DataAccess.Repositories.Interfaces;
@@ -16,9 +14,7 @@ namespace HealthGuard.xUnit.Tests.Services
         public DiseaseServiceTests()
         {
             _mockRepository = new Mock<IDiseaseRepository>();
-            _diseaseService = new DiseaseService(
-                new MapperConfiguration(cfg => cfg.AddProfile(new DiseaseProfile())).CreateMapper(),
-                _mockRepository.Object);
+            _diseaseService = new DiseaseService(_mockRepository.Object);
         }
 
         [Fact]

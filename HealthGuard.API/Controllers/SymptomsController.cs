@@ -25,16 +25,16 @@ namespace HealthGuard.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateSymptom([FromBody] string symptomName)
+        public async Task<IActionResult> CreateSymptom([FromBody] SymptomRequest model)
         {
-            await _symptomService.AddSymptomAsync(symptomName);
+            await _symptomService.AddSymptomAsync(model);
             return Ok();
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateSymptom(int id, [FromBody] string symptomName)
+        public async Task<IActionResult> UpdateSymptom(int id, [FromBody] SymptomRequest model)
         {
-            await _symptomService.UpdateSymptomAsync(id, symptomName);
+            await _symptomService.UpdateSymptomAsync(id, model);
             return Ok();
         }
 

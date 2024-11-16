@@ -10,9 +10,9 @@ namespace HealthGuard.Application.Services.Interfaces
 
         Task<Disease> GetByIdAsync(int id);
 
-        Task AddAsync(CreateDiseaseDto model);
+        Task AddAsync(DiseaseRequest model);
 
-        Task UpdateAsync(int id, CreateDiseaseDto model);
+        Task UpdateAsync(int id, DiseaseRequest model);
 
         Task DeleteAsync(int id);
     }

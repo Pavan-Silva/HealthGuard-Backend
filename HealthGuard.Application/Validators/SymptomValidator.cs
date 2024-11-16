@@ -3,9 +3,9 @@ using HealthGuard.Application.DTOs.Disease;
 
 namespace HealthGuard.Application.Validators
 {
-    public class DiseaseValidator : AbstractValidator<DiseaseRequest>
+    public class SymptomValidator : AbstractValidator<SymptomRequest>
     {
-        public DiseaseValidator()
+        public SymptomValidator()
         {
             RuleFor(r => r.Name)
                 .NotEmpty()
@@ -14,12 +14,6 @@ namespace HealthGuard.Application.Validators
             RuleFor(r => r.Description)
                 .NotEmpty()
                 .MinimumLength(10);
-
-            RuleFor(r => r.VaccineAvailable)
-                .NotNull();
-
-            RuleFor(r => r.Symptoms)
-                .NotEmpty();
         }
     }
 }

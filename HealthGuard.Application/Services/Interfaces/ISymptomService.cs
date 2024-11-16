@@ -8,9 +8,9 @@ namespace HealthGuard.Application.Services.Interfaces
     {
         Task<PaginatedList<Symptom>> GetSymptomsAsync(FilterByDiseaseParams filterParams, PageParams pageParams);
 
-        Task AddSymptomAsync(string symptom);
+        Task AddSymptomAsync(SymptomRequest model);
 
-        Task UpdateSymptomAsync(int id, string symptom);
+        Task UpdateSymptomAsync(int id, SymptomRequest model);
 
         Task DeleteSymptomAsync(int id);
     }

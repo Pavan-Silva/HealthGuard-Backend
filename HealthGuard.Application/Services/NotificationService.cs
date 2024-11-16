@@ -1,27 +1,25 @@
-﻿using AutoMapper;
-using HealthGuard.Application.DTOs;
+﻿using HealthGuard.Application.DTOs;
 using HealthGuard.Application.Exceptions;
 using HealthGuard.Application.Services.Interfaces;
 using HealthGuard.Core.Entities;
 using HealthGuard.DataAccess.Repositories.Interfaces;
+using Mapster;
 
 namespace HealthGuard.Application.Services
 {
     public class NotificationService : INotificationService
     {
-        private readonly IMapper _mapper;
         private readonly INotificationRepository _notificationRepository;
 
-        public NotificationService(INotificationRepository notificationRepository, IMapper mapper)
+        public NotificationService(INotificationRepository notificationRepository)
         {
-            _mapper = mapper;
             _notificationRepository = notificationRepository;
         }
 
         public async Task<List<NotificationDTO>> GetAllByReceiverAsync(string receiver)
         {
             var notifications = await _notificationRepository.GetAllAsync(n => n.User.Email == receiver);
-            return _mapper.Map<List<NotificationDTO>>(notifications);
+            return notifications.Adapt<List<NotificationDTO>>();
         }
 
         public async void MarkAsReadAsync(Guid id, string receiver)
