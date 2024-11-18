@@ -31,7 +31,7 @@ namespace HealthGuard.DataAccess.Repositories
                 .AsSplitQuery();
 
             return await query
-                .OrderBy(d => d.Id)
+                .OrderBy(d => d.Name)
                 .Skip((pageIndex - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
